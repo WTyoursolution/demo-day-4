@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Todos from "./components/Todos";
-import { createTodo, scanTodos, deleteTodo } from "./dynamo";
+import { createTodo, scanTodos, deleteTodo, toggleDone } from "./dynamo";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -14,6 +14,12 @@ function App() {
     }
     getTodos();
   }, []);
+
+async function handleToggle(todo) {
+  const flipped = !todo.completed
+  toggleDone(todo.id, flipped);
+  setTodos((prev) => prev.map(item => (item.id === todo.id ? {...item, completed: flipped} : item )))
+}
 
   async function handleDelete(id) {
     await deleteTodo(id);
@@ -41,7 +47,11 @@ function App() {
         />
       </label>
       <button onClick={handleAdd}>Add</button>
-      <Todos todos={todos} onHandleDelete={handleDelete} />
+      <Todos 
+      todos={todos} 
+      onHandleDelete={handleDelete} 
+      onHandleUpdate={handleToggle}
+      />
     </>
   );
 }

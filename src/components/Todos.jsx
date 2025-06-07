@@ -1,10 +1,19 @@
-export default function Todos({ todos, onHandleDelete }) {
+export default function Todos({ todos, onHandleDelete, onHandleUpdate }) {
+  const myStyles = { display: "flex", gap: "8px", alignItems: "center" }
   return (
     <ul>
       {todos.map((todo) => (
-        <div style={{display: "flex", gap: "8px", alignItems: "center"}}>
-        <input type="checkbox" name="done" id="done" />
-          <li key={todo.id}>{todo.text}</li>
+        <div
+        key={todo.id}
+        style={myStyles}
+        >
+        <input 
+        onChange={() => onHandleUpdate(todo)}
+        checked={todo.completed}
+        type="checkbox" 
+        name="done" 
+        id="done" />
+          <li style={{textDecoration: todo.completed ? "line-through" : "none"}}>{todo.text}</li>
           <button onClick={() => onHandleDelete(todo.id)}>X</button>
         </div>
       ))}
